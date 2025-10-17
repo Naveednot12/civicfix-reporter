@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicFix Reporter</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">
+            <div class="header-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                </svg>
+            </div>
+            <h1>CivicFix Reporter</h1>
+            <p>See a problem? Report it in seconds.</p>
+        </div>
+        <form id="report-form">
+            <div class="form-group">
+                <label for="issue-type">Type of Issue</label>
+                <select id="issue-type" name="issue_type" required>
+                    <option value="" disabled selected>Select an issue...</option>
+                    <option value="Pothole">Pothole</option>
+                    <option value="Streetlight">Streetlight Out</option>
+                    <option value="Garbage">Garbage Not Collected</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Upload a Photo</label>
+                <label for="photo-input" class="file-upload-label">
+                    <span>📷 Choose Photo</span>
+                </label>
+                <input type="file" id="photo-input" name="photo" accept="image/*" required>
+                <span id="file-name">No file chosen</span>
+            </div>
+
+            <div class="form-group">
+                <label>Your Location</label>
+                <button type="button" id="get-location-btn">📍 Get My Location</button>
+                <p id="location-status">Location not set</p>
+            </div>
+
+            <button type="submit" id="submit-btn">Submit Report</button>
+
+            <div id="feedback-area" class="hidden">
+                <div class="spinner"></div>
+                <p id="feedback-message"></p>
+            </div>
+        </form>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

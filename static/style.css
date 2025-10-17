@@ -1,0 +1,189 @@
+/* --- NEW: Updated Color Palette --- */
+:root {
+    --primary-color: #3498db;
+    --primary-dark: #2980b9;
+    --secondary-color: #2ecc71;
+    --background-start: #f2f6f8;
+    --background-end: #dcebf3;
+    --card-bg: #ffffff;
+    --shadow-color: rgba(100, 100, 150, 0.15);
+    --text-dark: #2c3e50;
+    --text-light: #8492a6;
+    --border-color: #e6e6e6;
+    --error-red: #e74c3c;
+}
+
+/* --- Global Styles --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, var(--background-start) 0%, var(--background-end) 100%);
+    color: var(--text-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* --- Card Layout --- */
+.card {
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 10px 40px var(--shadow-color);
+    width: 100%;
+    max-width: 400px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* --- Header with Icon --- */
+.card-header {
+    padding: 30px 24px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header-icon {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 16px;
+    color: var(--primary-color);
+}
+
+.card-header h1 {
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.card-header p {
+    font-size: 15px;
+    color: var(--text-light);
+    margin-top: 4px;
+}
+
+/* --- Form Styles --- */
+form {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* THIS IS THE KEY PART THAT STACKS THE LABELS AND INPUTS */
+.form-group {
+    display: flex;
+    flex-direction: column; /* This forces vertical stacking */
+}
+
+.form-group label {
+    display: block; /* Ensures the label takes its own line */
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-dark);
+}
+
+select, button, .file-upload-label {
+    font-family: 'Poppins', sans-serif;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+/* --- Custom File Upload Button --- */
+input[type="file"] {
+    display: none;
+}
+
+.file-upload-label {
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.file-upload-label:hover {
+    background-color: #f1f1f1;
+    border-color: #ccc;
+}
+
+#file-name {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-top: 8px;
+    text-align: center;
+    min-height: 18px;
+}
+
+/* --- Location Button --- */
+#get-location-btn {
+    background-color: white;
+    font-weight: 500;
+}
+
+#get-location-btn.success {
+    background-color: #eaf7ed;
+    color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+#location-status {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-top: 8px;
+    text-align: center;
+}
+
+/* --- Submit Button --- */
+button[type="submit"] {
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    border: none;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 14px;
+}
+
+button[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+}
+
+button:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* --- Feedback Area (Spinner & Messages) --- */
+.hidden { display: none !important; }
+#feedback-area { text-align: center; }
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border-left-color: var(--primary-color);
+    animation: spin 1s ease infinite;
+    margin: 0 auto 10px;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+#feedback-message.success { color: var(--secondary-color); font-weight: 500; }
+#feedback-message.error { color: var(--error-red); font-weight: 500; }
