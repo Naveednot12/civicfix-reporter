@@ -1,5 +1,5 @@
-fastapi==0.110.0
-starlette==0.37.2
+fastapi
+starlette
 uvicorn
 sqlalchemy
 geopy
