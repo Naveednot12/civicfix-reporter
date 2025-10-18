@@ -1,0 +1,6 @@
+# Python temporary files
+__pycache__/
+*.pyc
+
+# Local database file
+civicfix.db
