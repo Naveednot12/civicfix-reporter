@@ -60,11 +60,15 @@ async def create_report(
     ).first()
 
     if not routing_rule:
-        # If no rule is found, we can't send the email.
-        raise HTTPException(status_code=404, detail="No routing rule found for this location and issue type.")
-    
+    # If no rule is found, we can't send the email.
+    raise HTTPException(
+        status_code=404,
+        detail="No routing rule found for this location and issue type."
+    )
+
     target_email = routing_rule.contact_email
     print(f"Found routing rule. Target email: {target_email}")
+
 
     # --- Step C: Image Processing ---
     # Read the uploaded photo into memory as bytes.
