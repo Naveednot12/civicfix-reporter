@@ -53,21 +53,45 @@ async def create_report(
 
     # --- Step B: Database Routing ---
     # Query the database to find a matching routing rule.
+    # --- Step B: Database Routing with fallback ---
+
     routing_rule = (
         db.query(database.RoutingRule)
         .filter(
             database.RoutingRule.city == city,
+            database.RoutingRule.district == district,
             database.RoutingRule.issue_type == issue_type
         )
         .first()
     )
 
+# 2️⃣ Fallback: city + issue (ignore district)
     if not routing_rule:
         routing_rule = (
             db.query(database.RoutingRule)
-            .filter(database.RoutingRule.city == "DEFAULT")
+            .filter(
+                database.RoutingRule.city == city,
+                database.RoutingRule.issue_type == issue_type
+            )
             .first()
-    )
+        )
+
+# 3️⃣ Fallback: any city, any issue (global)
+    if not routing_rule:
+        routing_rule = (
+            db.query(database.RoutingRule)
+            .filter(database.RoutingRule.issue_type == issue_type)
+            .first()
+        )
+
+# Final fallback: default email (never fail)
+    if not routing_rule:
+        target_email = "naveed12092004@gmail.com"
+        print("No routing rule found. Using default email.")
+    else:
+        target_email = routing_rule.contact_email
+        print(f"Found routing rule. Target email: {target_email}")
+
 
 
     if routing_rule:
