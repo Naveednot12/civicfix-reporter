@@ -53,10 +53,22 @@ async def create_report(
 
     # --- Step B: Database Routing ---
     # Query the database to find a matching routing rule.
-    routing_rule = db.query(database.RoutingRule).filter(
-    database.RoutingRule.city == city,
-    database.RoutingRule.issue_type == issue_type
-    ).first()
+    routing_rule = (
+        db.query(database.RoutingRule)
+        .filter(
+            database.RoutingRule.city == city,
+            database.RoutingRule.issue_type == issue_type
+        )
+        .first()
+    )
+
+    if not routing_rule:
+        routing_rule = (
+            db.query(database.RoutingRule)
+            .filter(database.RoutingRule.city == "DEFAULT")
+            .first()
+    )
+
 
     if routing_rule:
         target_email = routing_rule.contact_email
