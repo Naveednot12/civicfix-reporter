@@ -54,20 +54,17 @@ async def create_report(
     # --- Step B: Database Routing ---
     # Query the database to find a matching routing rule.
     routing_rule = db.query(database.RoutingRule).filter(
-        database.RoutingRule.city == city,
-        database.RoutingRule.district == district,
-        database.RoutingRule.issue_type == issue_type
+    database.RoutingRule.city == city,
+    database.RoutingRule.issue_type == issue_type
     ).first()
 
-    if not routing_rule:
-    # If no rule is found, we can't send the email.
-    raise HTTPException(
-        status_code=404,
-        detail="No routing rule found for this location and issue type."
-    )
-
-    target_email = routing_rule.contact_email
-    print(f"Found routing rule. Target email: {target_email}")
+    if routing_rule:
+        target_email = routing_rule.contact_email
+        print(f"Found routing rule. Target email: {target_email}")
+    else:
+    # fallback email for any location / issue
+        target_email = "naveed12092004@gmail.com"
+        print("No routing rule found. Using fallback email.")
 
 
     # --- Step C: Image Processing ---
