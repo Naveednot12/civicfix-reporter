@@ -7,29 +7,34 @@ from PIL import Image
 import io
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from pathlib import Path
 
-# --- 1. Initial Setup ---
-# Create the database and tables when the app starts
-database.create_db_and_tables()
+BASE_DIR = Path(__file__).resolve().parent.parent
+STATIC_DIR = BASE_DIR / "static"
 
 # Create the main application instance
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 @app.get("/")
 async def read_index():
-    return FileResponse('static/index.html')
+    return FileResponse(STATIC_DIR / "index.html")
 # --- 2. Database Dependency ---
 # This function creates a "session" (a conversation) with the database
 # and makes sure it's closed correctly after the request is finished.
 # We will use this to talk to our database inside the API endpoint.
 def get_db():
-    db = database.SessionLocal()
     try:
+        database.create_db_and_tables()
+        db = database.SessionLocal()
         yield db
+    except Exception as exc:
+        print(f"Database initialization failed: {exc}")
+        raise HTTPException(status_code=503, detail="Database is unavailable.")
     finally:
-        db.close()
+        if "db" in locals():
+            db.close()
 
 # --- 3. The Main Reporting Endpoint ---
 @app.post("/report")

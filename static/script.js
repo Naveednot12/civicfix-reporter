@@ -14,6 +14,34 @@ const spinner = document.querySelector('.spinner');
 let userLatitude = null;
 let userLongitude = null;
 
+function preparePhoto(file) {
+    return new Promise((resolve, reject) => {
+        const image = new Image();
+        const objectUrl = URL.createObjectURL(file);
+
+        image.onload = () => {
+            URL.revokeObjectURL(objectUrl);
+            const scale = Math.min(1, 1200 / Math.max(image.width, image.height));
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.round(image.width * scale);
+            canvas.height = Math.round(image.height * scale);
+            canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob((blob) => {
+                if (blob) {
+                    resolve(new File([blob], 'issue_report.jpg', { type: 'image/jpeg' }));
+                } else {
+                    reject(new Error('Could not process the photo.'));
+                }
+            }, 'image/jpeg', 0.8);
+        };
+        image.onerror = () => {
+            URL.revokeObjectURL(objectUrl);
+            reject(new Error('Could not read the photo.'));
+        };
+        image.src = objectUrl;
+    });
+}
+
 // --- 2. Event Listeners ---
 
 // Update the file name when a user chooses a photo
@@ -73,7 +101,15 @@ form.addEventListener('submit', async (event) => {
     formData.append('lat', userLatitude);
     formData.append('lon', userLongitude);
     formData.append('issue_type', issueTypeSelect.value);
-    formData.append('photo', photoInput.files[0]);
+    try {
+        formData.append('photo', await preparePhoto(photoInput.files[0]));
+    } catch (error) {
+        feedbackMessage.textContent = error.message;
+        feedbackMessage.classList.add('error');
+        submitBtn.disabled = false;
+        spinner.style.display = 'none';
+        return;
+    }
 
     // --- Send data to the backend ---
     try {
@@ -82,7 +118,13 @@ form.addEventListener('submit', async (event) => {
             body: formData,
         });
 
-        const result = await response.json();
+        const responseText = await response.text();
+        let result = {};
+        try {
+            result = responseText ? JSON.parse(responseText) : {};
+        } catch {
+            result.detail = `Server returned HTTP ${response.status}.`;
+        }
 
         if (response.ok) {
             feedbackMessage.textContent = 'Report submitted successfully! Thank you.';

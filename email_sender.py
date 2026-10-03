@@ -17,6 +17,10 @@ def send_report_email(to_email, subject, body, photo_bytes):
     Sends an email with a photo attachment using the Brevo API.
     'photo_bytes' should be the raw byte content of the image file.
     """
+    if not API_KEY:
+        print("BREVO_API_KEY is not configured.")
+        return False
+
     api_url = "https://api.brevo.com/v3/smtp/email"
     
     # The headers are for authentication.
@@ -42,7 +46,7 @@ def send_report_email(to_email, subject, body, photo_bytes):
 
     try:
         # Make the POST request to the Brevo API to send the email.
-        response = requests.post(api_url, headers=headers, json=data)
+        response = requests.post(api_url, headers=headers, json=data, timeout=20)
         
         # Brevo returns status code 201 for a successful send.
         if response.status_code == 201:
